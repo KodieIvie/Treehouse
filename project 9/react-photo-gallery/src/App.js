@@ -1,5 +1,4 @@
 import React from 'react';
-import apiKey from './config'
 
 import './App.css';
 import {
@@ -21,7 +20,7 @@ const App = () => (
       <Route component={Nav} />
       <Switch>
         <Route exact path='/' render={ () => <Redirect to={"/search"} /> } />
-        <Route exact path="/search" render={ () => {return <Container apiKey={apiKey} /> }} />
+        <Route exact path="/search" component={Container} />
         <Route path="/search/:query" component={Container} />
         <Route path="/cats" render={ () => {return <Container query={'kittens'} /> }} />
         <Route path="/dogs" render={ () => {return <Container query={'puppys'} /> }} />
