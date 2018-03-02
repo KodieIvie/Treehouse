@@ -1,0 +1,23 @@
+{
+  "development": {
+    "database": "library.db",
+    "dialect": "sqlite",
+    "define": {
+      "timestamps": false
+    }
+  },
+  "test": {
+    "database": "library.db",
+    "dialect": "sqlite",
+    "define": {
+      "timestamps": false
+    }
+  },
+  "production": {
+    "username": "root",
+    "password": null,
+    "database": "library.db",
+    "host": "127.0.0.1",
+    "dialect": "sqlite"
+  }
+}
