@@ -47,12 +47,6 @@ router.get("/new_loan", (req, res, next) => {
           })
         })
       })
-    }).then(values => {
-      return res.render('loans/new_loan', {
-        loans: values,
-        loaned_on: moment().format('llll'),
-        return_by: moment().add(7, 'days').format('llll')
-      })
     })
       
 });
