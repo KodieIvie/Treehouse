@@ -35,15 +35,15 @@ router.get("/all_loans/api", (req, res, next) => {
 
 // get new loans form
 router.get("/new_loan", (req, res, next) => {
-    db.Book.findAll({include:[{model:db.Loan}]}).then(Books => {
-      db.Patron.findAll().then(Patrons => {
+    db.Book.findAll({include:[{model:db.Loan}]}).then(books => {
+      db.Patron.findAll().then(patrons => {
         return res.render('loans/new_loan', {
-          Books,
-          Patrons,
-          loaned_on: moment().format('llll'),
-          return_by: moment().add(7, 'days').format('llll')
+          books,
+          patrons,
+          loanedOn: moment().format('llll'),
+          returnBy: moment().add(7, 'days').format('llll')
         })
-      })  
+      })
     })
 });
 
@@ -56,11 +56,11 @@ router.post("/new_loan", (req, res, next) => {
     .catch(error => {
       if (error.name === "SequelizeValidationError") {
         return res.render("loans/new_loan", {
-	    	book_id: req.body.book_id,
-	    	patron_id: req.body.patron_id,
-	    	loaned_on: req.body.loaned_on,
-	    	return_by: req.body.return_by,
-	    	returned_on: req.body.returned_on
+  	    	book_id: req.body.book_id,
+  	    	patron_id: req.body.patron_id,
+  	    	loaned_on: req.body.loaned_on,
+  	    	return_by: req.body.return_by,
+  	    	returned_on: req.body.returned_on
         });
       } else {
         throw error;
