@@ -8,7 +8,7 @@ block content
         select#book_id(name="book_id")  
           each book in Books
             if !book.Loan
-              option(value= book.book_id)= book.title
+              option(value= book.id)= book.title
       |         
       p
         label(for='patron_id') Patron

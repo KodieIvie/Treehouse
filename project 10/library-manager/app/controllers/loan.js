@@ -36,19 +36,15 @@ router.get("/all_loans/api", (req, res, next) => {
 // get new loans form
 router.get("/new_loan", (req, res, next) => {
     db.Book.findAll({include:[{model:db.Loan}]}).then(Books => {
-      db.Loan.findAll().then(Loans => {
-        db.Patron.findAll().then(Patrons => {
-          return res.render('loans/new_loan', {
-            Books,
-            Loans,
-            Patrons,
-            loaned_on: moment().format('llll'),
-            return_by: moment().add(7, 'days').format('llll')
-          })
+      db.Patron.findAll().then(Patrons => {
+        return res.render('loans/new_loan', {
+          Books,
+          Patrons,
+          loaned_on: moment().format('llll'),
+          return_by: moment().add(7, 'days').format('llll')
         })
-      })
+      })  
     })
-      
 });
 
 // create new loans
