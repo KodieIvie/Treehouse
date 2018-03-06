@@ -8,7 +8,7 @@ module.exports = (app) => {
   app.use('/books', router);
 };
 
-// read - get all books
+// get all books - read 
 router.get("/all_books", (req, res, next) => {	
 	db.Book.findAll().then(books => {
 		return res.render('books/all_books', {books: books})

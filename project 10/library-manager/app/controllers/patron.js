@@ -22,7 +22,7 @@ router.get("/new_patron", (req, res, next) => {
 router.post("/new_patron", (req, res, next) => {
   db.Patron.create(req.body)
     .then(book => {
-      return res.redirect("/patrons");
+      return res.redirect("/patrons/all_patrons");
     })
     .catch(error => {
       if (error.name === "SequelizeValidationError") {

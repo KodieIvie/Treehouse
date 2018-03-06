@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../models');
+const moment = require('moment');
+const Op = require('sequelize').Op;
+
 
 module.exports = (app) => {
   app.use('/loans', router);
@@ -8,22 +11,50 @@ module.exports = (app) => {
 
 // read - get all Loans
 router.get('/all_loans', (req, res, next) => {
-	res.render('loans/all_loans');
+	db.Loan.findAll({
+      include: [
+        {model: db.Patron},
+        {model: db.Book}
+      ] 
+    }).then(values => {
+    res.render('loans/all_loans', {loans: values});
+  })
 });
+    
 
 // get all loans details api
 router.get("/all_loans/api", (req, res, next) => {
-	db.Loan.findAll({
-      include: [
-       	{model: db.Patron },
-       	{model: db.Book }
-      ] 
-    }).then(values=>res.send(values))
+	db.Book.findAll({include:[{model:db.Loan}]}).then(books => {
+    db.Loan.findAll().then(loans => {
+      db.Patron.findAll().then(patrons => {
+        res.send({books,loans,patrons})
+      })
+    })
+  })
 });
 
 // get new loans form
 router.get("/new_loan", (req, res, next) => {
-	return res.render('loans/new_loans')
+    db.Book.findAll({include:[{model:db.Loan}]}).then(Books => {
+      db.Loan.findAll().then(Loans => {
+        db.Patron.findAll().then(Patrons => {
+          return res.render('loans/new_loan', {
+            Books,
+            Loans,
+            Patrons,
+            loaned_on: moment().format('llll'),
+            return_by: moment().add(7, 'days').format('llll')
+          })
+        })
+      })
+    }).then(values => {
+      return res.render('loans/new_loan', {
+        loans: values,
+        loaned_on: moment().format('llll'),
+        return_by: moment().add(7, 'days').format('llll')
+      })
+    })
+      
 });
 
 // create new loans
