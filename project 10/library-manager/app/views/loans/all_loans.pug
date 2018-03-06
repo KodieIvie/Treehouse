@@ -4,15 +4,15 @@ block content
     h1 Loans
     |     
     p
-      a.button(href='new_loan.html') Create New Loan
+      a.button(href='/loans/new_loan') Create New Loan
     |     
     p
       | Filters 
-      a(href='all_loans.html') All
+      a(href='/loans/all_loans') All
       |  | 
-      a(href='overdue_loans.html') Overdue
+      a(href='/loans/overdue_loans') Overdue
       |  | 
-      a(href='checked_loans.html') Checked Out
+      a(href='/loans/checked_loans') Checked Out
     |     
     table
       thead
@@ -32,10 +32,10 @@ block content
       tbody
         tr
           td
-            a(href='book_detail.html') Emma
+            a(href='book_detail') Emma
           |                 
           td
-            a(href='patron_detail.html') Dave McFarland
+            a(href='patron_detail') Dave McFarland
           |                 
           td 2015-12-10
           |                 

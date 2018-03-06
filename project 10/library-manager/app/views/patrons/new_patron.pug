@@ -2,7 +2,7 @@ extends ../layout
 block content
     h1 New Patron
     |     
-    form
+    form(method="post" action="/patrons/new_patron")
       p
         label(for='first_name') First Name
         input#first_name(type='text')
