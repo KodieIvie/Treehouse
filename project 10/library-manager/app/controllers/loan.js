@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../models');
 const moment = require('moment');
-const Op = require('sequelize').Op;
+const Sequelize = require('sequelize');
+const db = require('../models');
+const Op = db.Sequelize.Op;
 
 
 module.exports = (app) => {
@@ -15,13 +16,12 @@ router.get('/all_loans', (req, res, next) => {
       include: [
         {model: db.Patron},
         {model: db.Book}
-      ] 
+      ]
     }).then(values => {
     res.render('loans/all_loans', {loans: values});
   })
 });
     
-
 // get all loans details api
 router.get("/all_loans/api", (req, res, next) => {
 	db.Book.findAll({include:[{model:db.Loan}]}).then(books => {
@@ -40,8 +40,8 @@ router.get("/new_loan", (req, res, next) => {
         return res.render('loans/new_loan', {
           books,
           patrons,
-          loanedOn: moment().format('llll'),
-          returnBy: moment().add(7, 'days').format('llll')
+          loaned_on: moment().format('llll'),
+          return_by: moment().add(7, 'days').format('llll')
         })
       })
     })

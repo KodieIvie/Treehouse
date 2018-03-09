@@ -9,10 +9,8 @@ module.exports = (sequelize, DataTypes) => {
     book_id: {
       type: DataTypes.INTEGER,
       validate: {
-        validate: {
-          notEmpty: {
-            msg: "Book ID is required"
-          }
+        notEmpty: {
+          msg: "Book ID is required"
         }
       }
     },
@@ -25,15 +23,30 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     loaned_on: {
-      type: DataTypes.DATE
+      type: DataTypes.DATE,
+      get() {
+        if (this.getDataValue('loaned_on')){
+          return this.getDataValue('loaned_on').slice(0, 10);
+        }          
+      },
     },
     return_by: {
-      type: DataTypes.DATE
+      type: DataTypes.DATE,
+      get() {
+        if (this.getDataValue('return_by')){
+          return this.getDataValue('return_by').slice(0, 10);
+        }          
+      },
     },
     returned_on: {
-      type: DataTypes.DATE
+      type: DataTypes.DATE,
+      get() {
+        if (this.getDataValue('returned_on')){
+          return this.getDataValue('returned_on').slice(0, 10);
+        }          
+      },
     }
-  }, {
+  },{
       tableName: "loans",
       timestamps: false
     });

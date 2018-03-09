@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const moment = require('moment');
+const Sequelize = require('sequelize');
 const db = require('../models');
-const Sequelize = require("sequelize");
-const Op = Sequelize.Op;
+const Op = db.Sequelize.Op;
 
 module.exports = (app) => {
   app.use('/books', router);
@@ -99,10 +100,11 @@ router.get("/overdue_books", (req, res, next) => {
       where: [{
           returned_on: {
             [Op.eq]: null
-        },
+          }
+        },{
           return_by: {
             [Op.lt]: Date.now()
-        }
+          }
       }]
       
   }).then( books => {
@@ -116,8 +118,8 @@ router.get("/checked_books", (req, res, next) => {
   db.Loan.findAll({
       where: 
         {
-          returned_on: { [Op.eq]: null },
-          return_by: { [Op.gt]: Date.now() }
+          returned_on: { [Op.eq]: null }
+          // return_by: { [Op.gt]: Date.now() }
         }
       
   }).then( books => {
