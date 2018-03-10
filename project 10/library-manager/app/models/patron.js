@@ -1,13 +1,13 @@
 'use strict';
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize, Sequelize) => {
   const Patron = sequelize.define('Patron', {
     id: {
-      type: DataTypes.UUID,
+      type: Sequelize.UUID,
       primaryKey: true,
       autoIncrement: true   
     },
     first_name: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         validate: {
           notEmpty: {
             msg: "First name is required"
@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
         }
       },
     last_name: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         validate: {
           notEmpty: {
             msg: "Last name is required"
@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
         }
       },
     address: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         validate: {
           notEmpty: {
             msg: "Address is required"
@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
         }
       },
     email: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         validate: {
           notEmpty: {
             msg: "Email is required"
@@ -39,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
         }
       },
     library_id: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         validate: {
           notEmpty: {
             msg: "Library id is required"
@@ -47,7 +47,7 @@ module.exports = (sequelize, DataTypes) => {
         }
       },
     zip_code: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         validate: {
           notEmpty: {
             msg: "Zip code is required"

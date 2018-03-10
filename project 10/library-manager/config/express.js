@@ -51,7 +51,7 @@ module.exports = (app, config) => {
 
   app.use((err, req, res, next) => {
     res.status(err.status || 500);
-    res.render('error', {
+    res.render('error2', {
       message: err.message,
       error: {},
       title: 'error'

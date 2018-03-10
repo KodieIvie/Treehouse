@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const moment = require('moment');
-const Sequelize = require('sequelize');
+
 const db = require('../models');
-const Op = db.Sequelize.Op;
+
 
 module.exports = (app) => {
   app.use('/patrons', router);
@@ -49,13 +49,13 @@ router.post("/new_patron", (req, res, next) => {
 // get one patron details
 router.get("/patron_detail/:id", (req, res, next) => {
 	  db.Patron.findOne({
-		where: {
-			id: req.params.id
-		},
-      	include: [
-        	{model: db.Loan, include:[ 
-        		{model: db.Book }] }
-      	]
+  		where: {
+  			id: req.params.id
+  		},
+    	include: [
+      	{model: db.Loan, include:[ 
+      		{model: db.Book }] }
+    	]
     })
     .then(patron => {
       res.render("patrons/patron_detail", {

@@ -1,13 +1,13 @@
 'use strict';
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize, Sequelize) => {
   const Loan = sequelize.define('Loan', {
     id: {
-      type: DataTypes.UUID,
+      type: Sequelize.UUID,
       primaryKey: true,
       autoIncrement: true 
     },
     book_id: {
-      type: DataTypes.INTEGER,
+      type: Sequelize.INTEGER,
       validate: {
         notEmpty: {
           msg: "Book ID is required"
@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     patron_id: {
-      type: DataTypes.INTEGER,
+      type: Sequelize.INTEGER,
       validate: {
         notEmpty: {
           msg: "Patron ID is required"
@@ -23,15 +23,15 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     loaned_on: {
-      type: DataTypes.DATE,
+      type: Sequelize.DATE,
       get() {
         if (this.getDataValue('loaned_on')){
           return this.getDataValue('loaned_on').slice(0, 10);
         }          
-      },
+      }
     },
     return_by: {
-      type: DataTypes.DATE,
+      type: Sequelize.DATE,
       get() {
         if (this.getDataValue('return_by')){
           return this.getDataValue('return_by').slice(0, 10);
@@ -39,12 +39,12 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     returned_on: {
-      type: DataTypes.DATE,
+      type: Sequelize.DATE,
       get() {
         if (this.getDataValue('returned_on')){
           return this.getDataValue('returned_on').slice(0, 10);
         }          
-      },
+      }
     }
   },{
       tableName: "loans",

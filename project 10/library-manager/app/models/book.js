@@ -1,13 +1,13 @@
 'use strict';
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize, Sequelize) => {
   const Book = sequelize.define('Book', {
     id: {
-      type: DataTypes.UUID,
+      type: Sequelize.UUID,
       primaryKey: true,
       autoIncrement: true
     },
     title: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         validate: {
           notEmpty: {
             msg: "Book title is required"
@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
         }
       },
       author: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         validate: {
           notEmpty: {
             msg: "Book author is required"
@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
         }
       },
       genre: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         validate: {
           notEmpty: {
             msg: "Book genre is required"
@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
         }
       },
 
-      first_published: {type: DataTypes.INTEGER}
+      first_published: {type: Sequelize.INTEGER}
     },
     {
       tableName: "books",

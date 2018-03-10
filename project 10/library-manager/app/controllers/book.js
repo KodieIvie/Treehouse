@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const moment = require('moment');
-const Sequelize = require('sequelize');
 const db = require('../models');
 const Op = db.Sequelize.Op;
 
@@ -79,54 +78,41 @@ router.post("/new_book", (req, res, next) => {
     .catch(error => {
       if (error.name === "SequelizeValidationError") {
         return res.render("books/new_book", {
-	    	
-	    	title: req.body.title,
-	    	genre: req.body.genre,
-	    	author: req.body.author,
-	    	first_published: req.body.first_published
-        });
-      } else {
-        throw error;
-      }
-    })
-    .catch(err => {
-      next(err)
-    });
+  	    	title: req.body.title,
+  	    	genre: req.body.genre,
+  	    	author: req.body.author,
+  	    	first_published: req.body.first_published
+          });
+        } else {
+          throw error;
+        }
+      })
+      .catch(err => {
+        next(err)
+      }); 
 });
 
 // overdue books
 router.get("/overdue_books", (req, res, next) => {
   db.Loan.findAll({
-      where: [{
-          returned_on: {
-            [Op.eq]: null
-          }
-        },{
-          return_by: {
-            [Op.lt]: Date.now()
-          }
-      }]
-      
+    where: {
+      [Op.and]:[
+        {return_by: {[Op.lt]: Date.now() }},
+        {returned_on: {[Op.lt]: db.Loan.loaned_on}}
+      ]
+    }
   }).then( books => {
       res.send(books)
   })
-
 })
 
 // checked out
 router.get("/checked_books", (req, res, next) => {
-  db.Loan.findAll({
-      where: 
-        {
-          returned_on: { [Op.eq]: null }
-          // return_by: { [Op.gt]: Date.now() }
-        }
-      
-  }).then( books => {
+  db.Loan.findAll({ where: { patron_id: !null || '' } }).then( books => {
       res.send(books)
   })
 
 })
 
 
-
+//return_by < Date.now() && returned_on < loaned_on

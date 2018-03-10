@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const moment = require('moment');
-const Sequelize = require('sequelize');
+
 const db = require('../models');
-const Op = db.Sequelize.Op;
+
 
 
 module.exports = (app) => {
@@ -71,6 +71,29 @@ router.post("/new_loan", (req, res, next) => {
     });
 });
 
-// overdue loans
+// return book get
+router.get("/return_book/:id/:patron", (req, res, next) => {
+  db.Loan.findOne({ 
+    include: [{model:db.Patron},{model:db.Book}],
+    where: [
+      {book_id: req.params.id},
+      {patron_id: req.params.patron}
+    ]}).then(loan => res.render("loans/return_book",{
+      loan:loan,
+      dateNow: moment().format('llll'),
+      return_by: moment().add(7, 'days').format('llll')
+    }))
+})
 
-// checked loans
+// return book post
+router.post("/return_book/:id/:patron", (req, res, next) => {
+  console.log(req.body)
+  db.Loan.update(req.body, {
+    where: [
+      {book_id: req.params.id}, 
+      {patron_id: req.params.patron}
+    ]
+  }).then(() => {
+    res.redirect('/loans/all_loans')
+  })
+})

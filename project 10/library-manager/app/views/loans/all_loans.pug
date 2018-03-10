@@ -10,9 +10,9 @@ block content
       | Filters 
       a(href='/loans/all_loans') All
       |  | 
-      a(href='/loans/overdue_loans') Overdue
+      a(href='/books/overdue_books') Overdue
       |  | 
-      a(href='/loans/checked_loans') Checked Out
+      a(href='/books/checked_books') Checked Out
     |     
     table
       thead
@@ -45,8 +45,9 @@ block content
               |                 
               td= loan.returned_on
               |                 
-              td
-                a.button(href='return_book') Return Book
+              if !loan.returned_on || loan.returned_on < loan.loaned_on
+                td
+                  a.button(href=`return_book/${loan.book_id}/${loan.patron_id}`) Return Book
             |
         else
           tr           
