@@ -23,33 +23,19 @@ module.exports = (sequelize, Sequelize) => {
       }
     },
     loaned_on: {
-      type: Sequelize.DATE,
-      get() {
-        if (this.getDataValue('loaned_on')){
-          return this.getDataValue('loaned_on').slice(0, 10);
-        }          
-      }
+      type: Sequelize.DATE
     },
     return_by: {
-      type: Sequelize.DATE,
-      get() {
-        if (this.getDataValue('return_by')){
-          return this.getDataValue('return_by').slice(0, 10);
-        }          
-      },
+      type: Sequelize.DATE
     },
     returned_on: {
-      type: Sequelize.DATE,
-      get() {
-        if (this.getDataValue('returned_on')){
-          return this.getDataValue('returned_on').slice(0, 10);
-        }          
-      }
+      type: Sequelize.DATE
     }
   },{
-      tableName: "loans",
-      timestamps: false
-    });
+    tableName: 'loans',
+    timestamps: false
+  }
+  );
   Loan.associate = function(models) {
     // associations can be defined here
     Loan.belongsTo(models.Book, {foreignKey: 'book_id'})

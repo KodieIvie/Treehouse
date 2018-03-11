@@ -1,5 +1,8 @@
 extends ../layout
 block content
+    if errors
+      each error in errors
+        p= error.message
     h1 New Loan
     |     
     form(method="post")
@@ -7,7 +10,7 @@ block content
         label(for='book_id') Book
         select#book_id(name="book_id")  
           each book in books
-            if !book.Loan || book.Loan.returned_on > book.Loan.loaned_on
+            if !book.Loan || book.Loan.returned_on >= book.Loan.loaned_on
               option(value= book.id)= book.title
       |         
       p

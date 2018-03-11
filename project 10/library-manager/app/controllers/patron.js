@@ -30,6 +30,7 @@ router.post("/new_patron", (req, res, next) => {
     .catch(error => {
       if (error.name === "SequelizeValidationError") {
         return res.render("patrons/new_patron", {
+        errors: error.errors,
 	    	first_name: req.body.first_name,
 	    	last_name: req.body.last_name,
 	    	address: req.body.address,
@@ -38,7 +39,7 @@ router.post("/new_patron", (req, res, next) => {
 	    	zip_code: req.body.zip_code
         });
       } else {
-        throw error;
+        next(err);
       }
     })
     .catch(err => {
@@ -59,7 +60,13 @@ router.get("/patron_detail/:id", (req, res, next) => {
     })
     .then(patron => {
       res.render("patrons/patron_detail", {
-        patron: patron
+        patron: patron,
+        first_name: patron.first_name,
+        last_name: patron.last_name,
+        address: patron.address,
+        email: patron.email,
+        library_id: patron.library_id,
+        zip_code: patron.zip_code
       })
     })
     .catch((err) => next(err))
@@ -76,4 +83,22 @@ router.post("/patron_detail/:id", (req, res, next) => {
 	}).then(() => {
 		return res.redirect('/patrons/all_patrons')
 	})
+    .catch(error => {
+      if (error.name === "SequelizeValidationError") {
+        return res.render("patrons/patron_detail", {
+          errors: error.errors,
+          first_name: req.body.first_name,
+          last_name: req.body.last_name,
+          address: req.body.address,
+          email: req.body.email,
+          library_id: req.body.library_id,
+          zip_code: req.body.zip_code
+        });
+      } else {
+        next(err);
+      }
+    })
+    .catch(err => {
+      next(err)
+    });
 });

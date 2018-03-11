@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const moment = require('moment');
-
 const db = require('../models');
-
+let Sequelize = require("sequelize");
+const Op = Sequelize.Op;
 
 
 module.exports = (app) => {
@@ -17,19 +17,9 @@ router.get('/all_loans', (req, res, next) => {
         {model: db.Patron},
         {model: db.Book}
       ]
-    }).then(values => {
-    res.render('loans/all_loans', {loans: values});
-  })
-});
-    
-// get all loans details api
-router.get("/all_loans/api", (req, res, next) => {
-	db.Book.findAll({include:[{model:db.Loan}]}).then(books => {
-    db.Loan.findAll().then(loans => {
-      db.Patron.findAll().then(patrons => {
-        res.send({books,loans,patrons})
-      })
-    })
+    }).then(loans => {
+    res.render('loans/all_loans', {loans: loans
+    });
   })
 });
 
@@ -56,11 +46,12 @@ router.post("/new_loan", (req, res, next) => {
     .catch(error => {
       if (error.name === "SequelizeValidationError") {
         return res.render("loans/new_loan", {
-  	    	book_id: req.body.book_id,
-  	    	patron_id: req.body.patron_id,
-  	    	loaned_on: req.body.loaned_on,
-  	    	return_by: req.body.return_by,
-  	    	returned_on: req.body.returned_on
+          errors: error.errors,
+          book_id: req.body.book_id,
+          patron_id: req.body.patron_id,
+          loaned_on: req.body.loaned_on,
+          return_by: req.body.return_by,
+          returned_on: req.body.returned_on
         });
       } else {
         throw error;
@@ -87,7 +78,6 @@ router.get("/return_book/:id/:patron", (req, res, next) => {
 
 // return book post
 router.post("/return_book/:id/:patron", (req, res, next) => {
-  console.log(req.body)
   db.Loan.update(req.body, {
     where: [
       {book_id: req.params.id}, 
@@ -96,4 +86,52 @@ router.post("/return_book/:id/:patron", (req, res, next) => {
   }).then(() => {
     res.redirect('/loans/all_loans')
   })
+    .catch(error => {
+      if (error.name === "SequelizeValidationError") {
+        return res.render("loans/return_book", {
+          errors: error.errors,
+          book_id: req.body.book_id,
+          patron_id: req.body.patron_id,
+          loaned_on: req.body.loaned_on,
+          return_by: req.body.return_by,
+          returned_on: req.body.returned_on
+        });
+      } else {
+        throw error;
+      }
+    })
+    .catch(err => {
+      next(err)
+    });
 })
+
+// checked out loans
+router.get("/checked_loans", (req, res, next) => {
+  db.Loan.findAll({
+    include: [
+      {model:db.Patron},
+      {model:db.Book}
+    ]
+  })
+  .then( loans => {
+    res.render('loans/checked_loans', {loans:loans})
+  })
+})
+
+// overdue loans
+router.get("/overdue_loans", (req, res, next) => {
+  db.Loan.findAll({
+    include:[{model:db.Book},{model:db.Patron}],
+    where: {
+      return_by: {
+        [Op.lt]: new Date()
+      },
+      returned_on: {
+        [Op.eq]: null
+      }
+    },
+  }).then( loans => {
+      res.render("loans/overdue_loans", {loans:loans})
+  })
+})
+

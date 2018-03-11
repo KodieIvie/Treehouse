@@ -33,8 +33,8 @@ module.exports = (sequelize, Sequelize) => {
     email: {
         type: Sequelize.STRING,
         validate: {
-          notEmpty: {
-            msg: "Email is required"
+          isEmail: {
+            msg: "Valid email is required"
           }
         }
       },
@@ -47,19 +47,18 @@ module.exports = (sequelize, Sequelize) => {
         }
       },
     zip_code: {
-        type: Sequelize.INTEGER,
-        validate: {
-          notEmpty: {
-            msg: "Zip code is required"
-          }
+      type: Sequelize.INTEGER,
+      validate: {
+        notEmpty: {
+          msg: "Zip code is required"
         }
       }
-    },
-      {
+    }
+  },{  
       tableName: "patrons",
       timestamps: false
-      }
-    );
+    }
+  );
 
   Patron.associate = function(models) {
     // associations can be defined here

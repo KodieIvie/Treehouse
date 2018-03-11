@@ -1,6 +1,7 @@
 extends ../layout
+
 block content
-    h1 Checked Out Books
+    h1 Loans
     |     
     p
       a.button(href='/loans/new_loan') Create New Loan
@@ -38,9 +39,9 @@ block content
               td
                 a(href='/patrons/patron_detail/'+Loan.patron_id)= Loan.Patron.first_name +' '+ Loan.Patron.last_name
               |                 
-              td= Loan.loaned_on.slice(0, 10)
+              td= Loan.loaned_on.slice(0,10)
               |                 
-              td= Loan.return_by.slice(0, 10)
+              td= Loan.return_by.slice(0,10)
               |
               if Loan.returned_on                 
                 td= Loan.returned_on.slice(0, 10)
@@ -57,4 +58,3 @@ block content
             |
         else            
           tr
-          |

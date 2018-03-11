@@ -3,15 +3,15 @@ block content
     h1 Books
     |     
     p
-      a.button(href='new_book') Create New Book
+      a.button(href='/books/new_book') Create New Book
     |     
     p
       | Filters 
-      a(href='all_books') All
+      a(href='/books/all_books') All
       |  | 
-      a(href='overdue_books') Overdue
+      a(href='/books/overdue_books') Overdue
       |  | 
-      a(href='checked_books') Checked Out
+      a(href='/books/checked_books') Checked Out
     |     
     table
       thead
@@ -28,7 +28,7 @@ block content
         each book in books
           tr
             td
-              a(href='book_detail/'+book.id)= book.title
+              a(href='/books/book_detail/'+book.id)= book.title
             |                 
             td= book.author
             |                 

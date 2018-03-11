@@ -1,5 +1,8 @@
 extends ../layout
 block content
+    if errors
+      each error in errors
+        p= error.message
     h1= book.title
     |     
     form(method="post")
@@ -48,14 +51,23 @@ block content
               td
                 a(href='/patrons/patron_detail/'+book.Loan.patron_id)= book.Loan.Patron.first_name +' '+ book.Loan.Patron.last_name
               |                 
-              td= book.Loan.loaned_on
+              td= book.Loan.loaned_on.slice(0, 10)
               |                 
-              td= book.Loan.return_by
-              |                 
-              td= book.Loan.returned_on
-              |                 
-              td
-                a.button(href='/return_book') Return Book
+              td= book.Loan.return_by.slice(0, 10)
+              |
+              if book.Loan.returned_on                 
+                td= book.Loan.returned_on.slice(0, 10)
+                |  
+              else
+                td
+                |                 
+              if !book.Loan.returned_on || book.Loan.returned_on < book.Loan.loaned_on                
+                td
+                  a.button(href=`/loans/return_book/${book.Loan.book_id}/${book.Loan.patron_id}`) Return Book
+              else
+                td
+                |
             |
-        else 
+        else            
           tr
+          |

@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const moment = require('moment');
 const db = require('../models');
-const Op = db.Sequelize.Op;
+let Sequelize = require("sequelize");
+const Op = Sequelize.Op;
 
 module.exports = (app) => {
   app.use('/books', router);
@@ -15,7 +16,7 @@ router.get("/all_books", (req, res, next) => {
 	})
 });
 
-// update get one
+// book details get one
 router.get("/book_detail/:id", (req, res, next) => {
     db.Book.findOne({
       where: {
@@ -33,35 +34,37 @@ router.get("/book_detail/:id", (req, res, next) => {
       })
     })
     .catch((err)=>next(err))
-
 });
 
-// delete this one
-router.get("/book_detail/:id/api", (req, res, next) => {
-    db.Book.findOne({
-      where: {
-        id: req.params.id
-      },
-      include: [
-        {model: db.Loan, include: [
-          {model: db.Patron, include: [ /* etc */]}
-        ]}
-      ]
-    }).then(values=>res.send(values))
-    
-});
-
-// update book details POST
+// book details update POST
 router.post("/book_detail/:id", (req, res, next) => {
 	db.Book.update(req.body, {
-	    where: [
-	      {
-	        id: req.params.id
-	      }
-	    ]
-	}).then(() => {
-		return res.redirect('/books/all_books')
+    where: [
+      {
+        id: req.params.id
+      }
+    ]
 	})
+  .then(() => {
+    return res.redirect('/books/all_books')
+  })
+  .catch(error => {
+    console.log(error)
+    if (error.name === "SequelizeValidationError") {
+      return res.render("books/book_detail", {
+        errors: error.errors,
+        title: req.body.title,
+        genre: req.body.genre,
+        author: req.body.author,
+        first_published: req.body.first_published
+      });
+    } else {
+      next(err)
+    }
+  })
+  .catch(err => {
+    next(err)
+  }); 
 });
 
 // get new book form
@@ -78,13 +81,14 @@ router.post("/new_book", (req, res, next) => {
     .catch(error => {
       if (error.name === "SequelizeValidationError") {
         return res.render("books/new_book", {
+          errors: error.errors,
   	    	title: req.body.title,
   	    	genre: req.body.genre,
   	    	author: req.body.author,
   	    	first_published: req.body.first_published
           });
         } else {
-          throw error;
+          next(err);
         }
       })
       .catch(err => {
@@ -95,24 +99,25 @@ router.post("/new_book", (req, res, next) => {
 // overdue books
 router.get("/overdue_books", (req, res, next) => {
   db.Loan.findAll({
+    include:{model:db.Book},
     where: {
-      [Op.and]:[
-        {return_by: {[Op.lt]: Date.now() }},
-        {returned_on: {[Op.lt]: db.Loan.loaned_on}}
-      ]
-    }
+      return_by: {
+        [Op.lt]: new Date()
+      },
+      returned_on: {
+        [Op.eq]: null
+      }
+    },
   }).then( books => {
-      res.send(books)
+      res.render("books/overdue_books", {books:books,nowDate: Date.now()})
   })
 })
 
 // checked out
 router.get("/checked_books", (req, res, next) => {
-  db.Loan.findAll({ where: { patron_id: !null || '' } }).then( books => {
-      res.send(books)
+  db.Loan.findAll({include: {model: db.Book}}).then( books => {
+      res.render("books/checked_books", {books:books})
   })
-
 })
 
-
-//return_by < Date.now() && returned_on < loaned_on
+router.get("/search", (req, res, next))

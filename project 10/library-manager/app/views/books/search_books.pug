@@ -1,6 +1,6 @@
 extends ../layout
 block content
-    h1 Overdue Books
+    h1 Search Results
     |     
     p
       a.button(href='/books/new_book') Create New Book
@@ -25,14 +25,13 @@ block content
           th Year Released
       |         
       tbody
-        each loan in books
-            tr
-              td
-                a(href='/books/book_detail/'+loan.book_id)= loan.Book.title
-              |                 
-              td= loan.Book.author
-              |                 
-              td= loan.Book.genre
-              |                 
-              td= loan.Book.first_published
-            |
+        each book in books
+          tr
+            td
+              a(href='/books/book_detail/'+book.id)= book.title
+            |                 
+            td= book.author
+            |                 
+            td= book.genre
+            |                 
+            td= book.first_published

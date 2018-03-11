@@ -30,8 +30,9 @@ module.exports = (sequelize, Sequelize) => {
           }
         }
       },
-
-      first_published: {type: Sequelize.INTEGER}
+      first_published: {
+        type: Sequelize.INTEGER
+      }
     },
     {
       tableName: "books",

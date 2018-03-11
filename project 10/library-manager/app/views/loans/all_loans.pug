@@ -1,5 +1,4 @@
 extends ../layout
-
 block content
     h1 Loans
     |     
@@ -10,9 +9,9 @@ block content
       | Filters 
       a(href='/loans/all_loans') All
       |  | 
-      a(href='/books/overdue_books') Overdue
+      a(href='/loans/overdue_loans') Overdue
       |  | 
-      a(href='/books/checked_books') Checked Out
+      a(href='/loans/checked_loans') Checked Out
     |     
     table
       thead
@@ -31,24 +30,30 @@ block content
       |         
       tbody
         if loans
-          each loan in loans
+          each Loan in loans
             tr
               td
-                a(href='/books/book_detail/'+loan.book_id)= loan.Book.title
+                a(href='/books/book_detail/'+Loan.book_id)= Loan.Book.title
               |                 
               td
-                a(href='/patrons/patron_detail/'+loan.patron_id)= loan.Patron.first_name +' '+ loan.Patron.last_name
+                a(href='/patrons/patron_detail/'+Loan.patron_id)= Loan.Patron.first_name +' '+ Loan.Patron.last_name
               |                 
-              td= loan.loaned_on
+              td= Loan.loaned_on.slice(0,10)
               |                 
-              td= loan.return_by
-              |                 
-              td= loan.returned_on
-              |                 
-              if !loan.returned_on || loan.returned_on < loan.loaned_on
+              td= Loan.return_by.slice(0,10)
+              |
+              if Loan.returned_on                 
+                td= Loan.returned_on.slice(0, 10)
+                |  
+              else
                 td
-                  a.button(href=`return_book/${loan.book_id}/${loan.patron_id}`) Return Book
+                |                 
+              if !Loan.returned_on || Loan.returned_on < Loan.loaned_on                
+                td
+                  a.button(href=`/loans/return_book/${Loan.book_id}/${Loan.patron_id}`) Return Book
+              else
+                td
+                |
             |
-        else
-          tr           
-        
+        else            
+          tr
