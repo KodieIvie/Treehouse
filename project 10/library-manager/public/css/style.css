@@ -92,3 +92,7 @@ input {
 input[type=text], select {
   margin-left: 10px;
 }
+input.search {
+  margin-left: 0px;
+  margin-right: 15px;
+}

@@ -16,6 +16,22 @@ router.get("/all_books", (req, res, next) => {
 	})
 });
 
+// search results
+router.post("/all_books", (req, res, next) => {
+  db.Book.findAll({where: {
+    [Op.or]: [
+      { title: { [Op.like]: `%${req.body.search}%` } },
+      { author: { [Op.like]: `%${req.body.search}%` } },
+      { genre: { [Op.like]: `%${req.body.search}%` } }
+    ]}
+  }).then(results => {
+    console.log(results)
+      return res.render("books/search_books", {
+        results: results
+    })
+  })
+})
+
 // book details get one
 router.get("/book_detail/:id", (req, res, next) => {
     db.Book.findOne({
@@ -119,5 +135,3 @@ router.get("/checked_books", (req, res, next) => {
       res.render("books/checked_books", {books:books})
   })
 })
-
-router.get("/search", (req, res, next))

@@ -3,8 +3,12 @@ block content
     h1 Search Results
     |     
     p
-      a.button(href='/books/new_book') Create New Book
-    |     
+      a.button(href='/books/new_book') Create New Book     
+    |
+    form(method="post" action="/books/all_books")
+      input.search(type="submit" value="Search")
+      input.search(type="text" name="search" placeholder="Search Title, Author, Genre..") 
+    |
     p
       | Filters 
       a(href='/books/all_books') All
@@ -12,7 +16,8 @@ block content
       a(href='/books/overdue_books') Overdue
       |  | 
       a(href='/books/checked_books') Checked Out
-    |     
+    |
+        
     table
       thead
         tr
@@ -25,13 +30,14 @@ block content
           th Year Released
       |         
       tbody
-        each book in books
-          tr
-            td
-              a(href='/books/book_detail/'+book.id)= book.title
-            |                 
-            td= book.author
-            |                 
-            td= book.genre
-            |                 
-            td= book.first_published
+        if results
+          each book in results
+            tr
+              td
+                a(href='/books/book_detail/'+book.dataValues.id)= book.dataValues.title
+              |                 
+              td= book.dataValues.author
+              |                 
+              td= book.dataValues.genre
+              |                 
+              td= book.dataValues.first_published
