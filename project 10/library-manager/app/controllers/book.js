@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const moment = require('moment');
 const db = require('../models');
-let Sequelize = require("sequelize");
+const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
 const paginate = require('express-paginate');
 
