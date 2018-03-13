@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router();
 const moment = require('moment');
 const db = require('../models');
-let Sequelize = require("sequelize");
+const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
-
+const paginate = require('express-paginate');
 
 module.exports = (app) => {
   app.use('/loans', router);
@@ -12,20 +12,33 @@ module.exports = (app) => {
 
 // read - get all Loans
 router.get('/all_loans', (req, res, next) => {
-	db.Loan.findAll({
-      include: [
+	db.Loan.findAndCountAll({
+    limit: req.query.limit, 
+    offset: req.skip, 
+    include: [
         {model: db.Patron},
         {model: db.Book}
-      ]
-    }).then(loans => {
-    res.render('loans/all_loans', {loans: loans
-    });
-  })
+      ]})
+    .then(results => {
+      const itemCount = results.count;
+      const pageCount = Math.ceil(results.count / req.query.limit);
+      res.render('loans/all_loans', {
+        loans: results.rows,
+        pageCount,
+        itemCount,
+        pages: paginate.getArrayPages(req)(3, pageCount, req.query.page)
+      });  
+  }).catch(err => next(err))
 });
 
 // get new loans form
 router.get("/new_loan", (req, res, next) => {
-    db.Book.findAll({include:[{model:db.Loan}]}).then(books => {
+    db.Book.findAll({
+      include: [
+        {model:db.Loan}
+      ]
+    })
+    .then(books => {
       db.Patron.findAll().then(patrons => {
         return res.render('loans/new_loan', {
           books,
@@ -33,8 +46,8 @@ router.get("/new_loan", (req, res, next) => {
           loaned_on: moment().format('llll'),
           return_by: moment().add(7, 'days').format('llll')
         })
-      })
-    })
+      }).catch(err => next(err))
+    }).catch(err => next(err))
 });
 
 // create new loans
@@ -54,12 +67,9 @@ router.post("/new_loan", (req, res, next) => {
           returned_on: req.body.returned_on
         });
       } else {
-        throw error;
+          next(error)
       }
-    })
-    .catch(err => {
-      next(err)
-    });
+    }).catch(err => next(err))
 });
 
 // return book get
@@ -69,11 +79,14 @@ router.get("/return_book/:id/:patron", (req, res, next) => {
     where: [
       {book_id: req.params.id},
       {patron_id: req.params.patron}
-    ]}).then(loan => res.render("loans/return_book",{
+    ]
+  })
+  .then(loan => res.render("loans/return_book",{
       loan:loan,
       dateNow: moment().format('llll'),
       return_by: moment().add(7, 'days').format('llll')
     }))
+  .catch(err => next(err))
 })
 
 // return book post
@@ -83,10 +96,11 @@ router.post("/return_book/:id/:patron", (req, res, next) => {
       {book_id: req.params.id}, 
       {patron_id: req.params.patron}
     ]
-  }).then(() => {
+  })
+  .then(() => {
     res.redirect('/loans/all_loans')
   })
-    .catch(error => {
+  .catch(error => {
       if (error.name === "SequelizeValidationError") {
         return res.render("loans/return_book", {
           errors: error.errors,
@@ -97,12 +111,9 @@ router.post("/return_book/:id/:patron", (req, res, next) => {
           returned_on: req.body.returned_on
         });
       } else {
-        throw error;
+          next(error)
       }
     })
-    .catch(err => {
-      next(err)
-    });
 })
 
 // checked out loans
@@ -116,6 +127,7 @@ router.get("/checked_loans", (req, res, next) => {
   .then( loans => {
     res.render('loans/checked_loans', {loans:loans})
   })
+  .catch(err => next(err))
 })
 
 // overdue loans

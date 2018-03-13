@@ -96,3 +96,33 @@ input.search {
   margin-left: 0px;
   margin-right: 15px;
 }
+.navigation, .well-sm {
+  margin-top: 15px;
+  margin-left: 0 auto;
+}
+ul.pager {
+  padding-left: 0;
+  margin: 20px 0;
+  text-align: center;
+  list-style: none;
+  display: inline-block;
+}
+.pager li {
+  border: 1px solid #019875;
+  width: 50px;
+  padding: 10px;
+  display: inline;
+}
+a.pagNum {
+  border-bottom: 1px solid;
+  border-radius: 2px;
+  padding: 5px;
+  margin: 5px;
+}
+li.next, li.previous {
+  border-radius: 50px;
+  margin: 0 10px;
+}
+table {
+  border-bottom: 1px solid #D8B493;
+}

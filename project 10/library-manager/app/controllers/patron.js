@@ -1,9 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const moment = require('moment');
-
 const db = require('../models');
-
 
 module.exports = (app) => {
   app.use('/patrons', router);
@@ -11,9 +9,11 @@ module.exports = (app) => {
 
 // read - get all patrons
 router.get("/all_patrons", (req, res, next) => {	
-	db.Patron.findAll().then(patrons => {
-		return res.render('patrons/all_patrons', {patrons: patrons})
-	})
+	db.Patron.findAll()
+  .then(patrons => {
+	  return res.render('patrons/all_patrons', {patrons: patrons})
+  })
+  .catch(err => next(err))
 });
 
 // get new patron form
@@ -30,21 +30,18 @@ router.post("/new_patron", (req, res, next) => {
     .catch(error => {
       if (error.name === "SequelizeValidationError") {
         return res.render("patrons/new_patron", {
-        errors: error.errors,
-	    	first_name: req.body.first_name,
-	    	last_name: req.body.last_name,
-	    	address: req.body.address,
-	    	email: req.body.email,
-	    	library_id: req.body.library_id,
-	    	zip_code: req.body.zip_code
+          errors: error.errors,
+  	    	first_name: req.body.first_name,
+  	    	last_name: req.body.last_name,
+  	    	address: req.body.address,
+  	    	email: req.body.email,
+  	    	library_id: req.body.library_id,
+  	    	zip_code: req.body.zip_code
         });
       } else {
-        next(err);
+        next(error);
       }
     })
-    .catch(err => {
-      next(err)
-    });
 });
 
 // get one patron details
@@ -69,18 +66,17 @@ router.get("/patron_detail/:id", (req, res, next) => {
         zip_code: patron.zip_code
       })
     })
-    .catch((err) => next(err))
+    .catch(err => next(err))
 });
 
 // update patron details
 router.post("/patron_detail/:id", (req, res, next) => {
 	db.Patron.update(req.body, {
-	    where: [
-	      {
-	        id: req.params.id
-	      }
-	    ]
-	}).then(() => {
+	    where: [{ 
+        id: req.params.id 
+      }]
+	})
+  .then(() => {
 		return res.redirect('/patrons/all_patrons')
 	})
     .catch(error => {
@@ -95,10 +91,7 @@ router.post("/patron_detail/:id", (req, res, next) => {
           zip_code: req.body.zip_code
         });
       } else {
-        next(err);
+        next(error);
       }
     })
-    .catch(err => {
-      next(err)
-    });
 });

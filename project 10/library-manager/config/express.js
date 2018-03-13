@@ -7,12 +7,13 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const compress = require('compression');
 const methodOverride = require('method-override');
+const paginate = require('express-paginate');
 
 module.exports = (app, config) => {
   const env = process.env.NODE_ENV || 'development';
   app.locals.ENV = env;
   app.locals.ENV_DEVELOPMENT = env == 'development';
-  
+  app.use(paginate.middleware(10, 50));
   app.set('views', config.root + '/app/views');
   app.set('view engine', 'pug');
 

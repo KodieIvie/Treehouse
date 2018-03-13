@@ -2,10 +2,10 @@ const gulp = require('gulp');
 const nodemon = require('gulp-nodemon');
 const plumber = require('gulp-plumber');
 const livereload = require('gulp-livereload');
-
+const webserver = require('gulp-webserver');
 
 gulp.task('develop', () => {
-  livereload.listen();
+
   nodemon({
     script: 'app.js',
     ext: 'js coffee jade',

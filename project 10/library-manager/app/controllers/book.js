@@ -4,17 +4,27 @@ const moment = require('moment');
 const db = require('../models');
 let Sequelize = require("sequelize");
 const Op = Sequelize.Op;
+const paginate = require('express-paginate');
 
 module.exports = (app) => {
   app.use('/books', router);
 };
 
-// get all books - read 
-router.get("/all_books", (req, res, next) => {	
-	db.Book.findAll().then(books => {
-		return res.render('books/all_books', {books: books})
-	})
+// get all books + Pagination
+router.get("/all_books", (req, res, next) => {
+  db.Book.findAndCountAll({limit: req.query.limit, offset: req.skip})
+    .then(results => {
+      const itemCount = results.count;
+      const pageCount = Math.ceil(results.count / req.query.limit);
+      res.render('books/all_books', {
+        books: results.rows,
+        pageCount,
+        itemCount,
+        pages: paginate.getArrayPages(req)(3, pageCount, req.query.page)
+      });  
+  }).catch(err => next(err))
 });
+
 
 // search results
 router.post("/all_books", (req, res, next) => {
@@ -25,11 +35,10 @@ router.post("/all_books", (req, res, next) => {
       { genre: { [Op.like]: `%${req.body.search}%` } }
     ]}
   }).then(results => {
-    console.log(results)
       return res.render("books/search_books", {
         results: results
     })
-  })
+  }).catch(err => next(err))
 })
 
 // book details get one
@@ -43,13 +52,11 @@ router.get("/book_detail/:id", (req, res, next) => {
           {model: db.Patron, include: [ /* etc */]}
         ]}
       ]
-    })
-    .then(book => {
+    }).then(book => {
       res.render("books/book_detail", {
         book: book
       })
-    })
-    .catch((err)=>next(err))
+    }).catch((err)=>next(err))
 });
 
 // book details update POST
@@ -60,8 +67,7 @@ router.post("/book_detail/:id", (req, res, next) => {
         id: req.params.id
       }
     ]
-	})
-  .then(() => {
+	}).then(() => {
     return res.redirect('/books/all_books')
   })
   .catch(error => {
@@ -75,12 +81,9 @@ router.post("/book_detail/:id", (req, res, next) => {
         first_published: req.body.first_published
       });
     } else {
-      next(err)
+      next(error)
     }
   })
-  .catch(err => {
-    next(err)
-  }); 
 });
 
 // get new book form
@@ -102,14 +105,11 @@ router.post("/new_book", (req, res, next) => {
   	    	genre: req.body.genre,
   	    	author: req.body.author,
   	    	first_published: req.body.first_published
-          });
-        } else {
-          next(err);
+        });
+      } else {
+          next(error);
         }
-      })
-      .catch(err => {
-        next(err)
-      }); 
+    })
 });
 
 // overdue books
@@ -124,14 +124,17 @@ router.get("/overdue_books", (req, res, next) => {
         [Op.eq]: null
       }
     },
-  }).then( books => {
+  })
+  .then( books => {
       res.render("books/overdue_books", {books:books,nowDate: Date.now()})
   })
+  .catch(err => next(err))
 })
 
 // checked out
 router.get("/checked_books", (req, res, next) => {
-  db.Loan.findAll({include: {model: db.Book}}).then( books => {
+  db.Loan.findAll({include: {model: db.Book}})
+  .then( books => {
       res.render("books/checked_books", {books:books})
-  })
+  }).catch(err => next(err))
 })
