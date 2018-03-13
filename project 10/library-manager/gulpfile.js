@@ -2,10 +2,9 @@ const gulp = require('gulp');
 const nodemon = require('gulp-nodemon');
 const plumber = require('gulp-plumber');
 const livereload = require('gulp-livereload');
-const webserver = require('gulp-webserver');
+const open = require('gulp-open');
 
 gulp.task('develop', () => {
-
   nodemon({
     script: 'app.js',
     ext: 'js coffee jade',
@@ -20,7 +19,6 @@ gulp.task('develop', () => {
     this.stderr.pipe(process.stderr);
   });
 });
-
 gulp.task('default', [
   'develop'
 ]);
