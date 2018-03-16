@@ -26,7 +26,7 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.DATE,
       validate: {
         isDate: {
-          msg: "Must have valid date"
+          msg: "Loaned on must have valid date"
         },
         notEmpty: {
           msg: "Loaned on date required"
@@ -37,7 +37,7 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.DATE,
       validate: {
         isDate: {
-          msg: "Must have valid date"
+          msg: "Return by must have valid date"
         },
         notEmpty: {
           msg: "Return by date is required"
@@ -48,7 +48,7 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.DATE,
       validate: {
         isDate: {
-          msg: "Must have valid date"
+          msg: "Returned on must have valid date"
         },
         notEmpty: {
           msg: "Returned on date is required"
