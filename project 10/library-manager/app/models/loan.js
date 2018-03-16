@@ -23,13 +23,37 @@ module.exports = (sequelize, Sequelize) => {
       }
     },
     loaned_on: {
-      type: Sequelize.DATE
+      type: Sequelize.DATE,
+      validate: {
+        isDate: {
+          msg: "Must have valid date"
+        },
+        notEmpty: {
+          msg: "Loaned on date required"
+        }
+      }
     },
     return_by: {
-      type: Sequelize.DATE
+      type: Sequelize.DATE,
+      validate: {
+        isDate: {
+          msg: "Must have valid date"
+        },
+        notEmpty: {
+          msg: "Return by date is required"
+        }
+      }
     },
     returned_on: {
-      type: Sequelize.DATE
+      type: Sequelize.DATE,
+      validate: {
+        isDate: {
+          msg: "Must have valid date"
+        },
+        notEmpty: {
+          msg: "Returned on date is required"
+        }
+      }
     }
   },{
     tableName: 'loans',

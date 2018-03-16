@@ -1,5 +1,8 @@
 extends ../layout
 block content
+    if errors
+      each error in errors
+        p= error.message
     h1= first_name +' '+ last_name
     |     
     form(method='post')

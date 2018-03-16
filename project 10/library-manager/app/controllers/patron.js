@@ -81,15 +81,28 @@ router.post("/patron_detail/:id", (req, res, next) => {
 	})
     .catch(error => {
       if (error.name === "SequelizeValidationError") {
-        return res.render("patrons/patron_detail", {
-          errors: error.errors,
-          first_name: req.body.first_name,
-          last_name: req.body.last_name,
-          address: req.body.address,
-          email: req.body.email,
-          library_id: req.body.library_id,
-          zip_code: req.body.zip_code
-        });
+            db.Patron.findOne({
+              where: {
+                id: req.params.id
+              },
+              include: [
+                {model: db.Loan, include:[ 
+                  {model: db.Book }] }
+              ]
+            })
+            .then(patron => {
+              res.render("patrons/patron_detail", {
+                errors: error.errors,
+                patron: patron,
+                first_name: patron.first_name,
+                last_name: patron.last_name,
+                address: patron.address,
+                email: patron.email,
+                library_id: patron.library_id,
+                zip_code: patron.zip_code
+              })
+            })
+            .catch(err => next(err))
       } else {
         next(error);
       }

@@ -6,6 +6,9 @@ const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
 const paginate = require('express-paginate');
 
+const dateNow = moment().format('llll');
+const returnBy = moment().add(7, 'days').format('llll');
+
 module.exports = (app) => {
   app.use('/loans', router);
 };
@@ -43,29 +46,37 @@ router.get("/new_loan", (req, res, next) => {
         return res.render('loans/new_loan', {
           books,
           patrons,
-          loaned_on: moment().format('llll'),
-          return_by: moment().add(7, 'days').format('llll')
+          loaned_on: dateNow,
+          return_by: returnBy
         })
       }).catch(err => next(err))
     }).catch(err => next(err))
 });
 
-// create new loans
+// post new loans
 router.post("/new_loan", (req, res, next) => {
   db.Loan.create(req.body)
-    .then(book => {
+    .then(() => {
       return res.redirect("/loans/all_loans");
     })
     .catch(error => {
       if (error.name === "SequelizeValidationError") {
-        return res.render("loans/new_loan", {
-          errors: error.errors,
-          book_id: req.body.book_id,
-          patron_id: req.body.patron_id,
-          loaned_on: req.body.loaned_on,
-          return_by: req.body.return_by,
-          returned_on: req.body.returned_on
-        });
+        db.Book.findAll({
+              include: [
+                {model:db.Loan}
+              ]
+            })
+            .then(books => {
+              db.Patron.findAll().then(patrons => {
+                return res.render('loans/new_loan', {
+                  errors: error.errors,
+                  books,
+                  patrons,
+                  loaned_on: dateNow,
+                  return_by: returnBy
+                })
+              }).catch(err => next(err))
+            }).catch(err => next(err))
       } else {
           next(error)
       }
@@ -83,8 +94,8 @@ router.get("/return_book/:id/:patron", (req, res, next) => {
   })
   .then(loan => res.render("loans/return_book",{
       loan:loan,
-      dateNow: moment().format('llll'),
-      return_by: moment().add(7, 'days').format('llll')
+      dateNow: dateNow,
+      return_by: returnBy
     }))
   .catch(err => next(err))
 })
@@ -102,14 +113,20 @@ router.post("/return_book/:id/:patron", (req, res, next) => {
   })
   .catch(error => {
       if (error.name === "SequelizeValidationError") {
-        return res.render("loans/return_book", {
-          errors: error.errors,
-          book_id: req.body.book_id,
-          patron_id: req.body.patron_id,
-          loaned_on: req.body.loaned_on,
-          return_by: req.body.return_by,
-          returned_on: req.body.returned_on
-        });
+        db.Loan.findOne({ 
+          include: [{model:db.Patron},{model:db.Book}],
+          where: [
+            {book_id: req.params.id},
+            {patron_id: req.params.patron}
+          ]
+        })
+        .then(loan => res.render("loans/return_book",{
+            errors: error.errors,
+            loan:loan,
+            dateNow: dateNow,
+            return_by: returnBy
+          }))
+        .catch(err => next(err))
       } else {
           next(error)
       }
@@ -122,7 +139,10 @@ router.get("/checked_loans", (req, res, next) => {
     include: [
       {model:db.Patron},
       {model:db.Book}
-    ]
+    ],
+    where: {
+      returned_on: { [Op.eq]: null }
+    }
   })
   .then( loans => {
     res.render('loans/checked_loans', {loans:loans})
