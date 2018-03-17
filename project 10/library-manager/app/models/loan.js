@@ -23,7 +23,7 @@ module.exports = (sequelize, Sequelize) => {
       }
     },
     loaned_on: {
-      type: Sequelize.DATE,
+      type: Sequelize.DATEONLY,
       validate: {
         isDate: {
           msg: "Loaned on must have valid date"
@@ -34,7 +34,7 @@ module.exports = (sequelize, Sequelize) => {
       }
     },
     return_by: {
-      type: Sequelize.DATE,
+      type: Sequelize.DATEONLY,
       validate: {
         isDate: {
           msg: "Return by must have valid date"
@@ -45,7 +45,7 @@ module.exports = (sequelize, Sequelize) => {
       }
     },
     returned_on: {
-      type: Sequelize.DATE,
+      type: Sequelize.DATEONLY,
       validate: {
         isDate: {
           msg: "Returned on must have valid date"

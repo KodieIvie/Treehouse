@@ -6,8 +6,8 @@ const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
 const paginate = require('express-paginate');
 
-const dateNow = moment().format('llll');
-const returnBy = moment().add(7, 'days').format('llll');
+const dateNow = moment().format('YYYY-MM-DD');
+const returnBy = moment().add(7, 'days').format('YYYY-MM-DD');
 
 module.exports = (app) => {
   app.use('/loans', router);
