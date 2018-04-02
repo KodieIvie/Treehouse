@@ -71,7 +71,7 @@ router.get('/courses/:courseId', function(req, res, next) {
 router.post('/courses', mid.authenticateUser, function(req, res, next) {
   var course = new Course(req.body);
   course.save(function(err, course) {
-    if(err) return res.json(err);
+    if(err) return next(err);
     res.status(201);
     res.location('/courses').json();
   });
@@ -80,7 +80,7 @@ router.post('/courses', mid.authenticateUser, function(req, res, next) {
 // PUT /api/courses/:courseId 204 - Updates a course and returns no content
 router.put('/courses/:courseId', mid.authenticateUser, function(req, res, next) {
   req.course.update(req.body, function(err, result) {
-    if(err) return res.json(err);
+    if(err) return next(err);
     res.status(204).json();
   });
 });
@@ -89,7 +89,7 @@ router.put('/courses/:courseId', mid.authenticateUser, function(req, res, next) 
 router.post('/courses/:courseId/reviews', mid.authenticateUser,   function(req, res, next) {
   req.course.reviews.push(req.body);
   req.course.save(function(err, course) {
-    if(err) return res.json(err);
+    if(err) return next(err);
     res.status(201);
     res.location('/:courseId').json();
   });
