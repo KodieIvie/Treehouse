@@ -1,7 +1,7 @@
 'use strict';
 
 var mongoose = require('mongoose');
-var User = require('./user.js');
+var User = require('./user');
 
 var Schema = mongoose.Schema
 
@@ -20,7 +20,8 @@ var ReviewSchema = new Schema({
     min: 1,
     max: 5
    },
-  review: String
+  review: String,
+
 });
 
 

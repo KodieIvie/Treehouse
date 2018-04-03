@@ -40,7 +40,7 @@ var CourseSchema = new Schema({
       ref: 'Review'
     }
   ]
-});
+}, { usePushEach: true });
 
 var Course = mongoose.model('Course', CourseSchema);
 

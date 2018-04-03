@@ -91,7 +91,7 @@ router.post('/courses/:courseId/reviews', mid.authenticateUser,   function(req, 
   req.course.save(function(err, course) {
     if(err) return next(err);
     res.status(201);
-    res.location('/:courseId').json();
+    res.location('/courses/:courseId').json();
   });
 });
 

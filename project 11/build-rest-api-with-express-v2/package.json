@@ -16,7 +16,8 @@
     "bcrypt": "^1.0.3",
     "body-parser": "^1.18.2",
     "express": "^4.13.4",
-    "mongoose": "4.5.8",
+    "mongodb": "^3.0.5",
+    "mongoose": "^4.5.8",
     "mongoose-seeder": "^1.2.1",
     "morgan": "^1.7.0"
   }

@@ -10,12 +10,13 @@ var mongoose = require('mongoose');
 var seeder = require('mongoose-seeder');
 var data = require('./data/data.json');
 
+mongoose.Promise = global.Promise;
 
 mongoose.connect('mongodb://localhost:27017/reviewCourse')
   .then(function() {
       console.log('db connection successful');
       seeder.seed(data).then(function(dbData) {
-          console.log('db has been seeded')
+          console.log('db seeded')
       }).catch(function(err) {
           console.log(err);
       });
