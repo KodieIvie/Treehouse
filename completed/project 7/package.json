@@ -1,0 +1,20 @@
+{
+  "name": "api-with-node-v1",
+  "version": "1.0.0",
+  "description": "Set up a new Express project in the provided app.js file. You will need to create the following files:",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "moment": "^2.20.1",
+    "pug": "^2.0.0-rc.4",
+    "twit": "^2.2.9"
+  }
+}

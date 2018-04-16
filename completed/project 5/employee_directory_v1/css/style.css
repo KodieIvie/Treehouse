@@ -1,0 +1,84 @@
+
+#employees {
+	box-sizing: border-box;
+}
+.title {
+	margin: 40px;
+	margin-left: 20px;
+	margin-bottom: 15px;
+	font-size: 1.05em;
+	color: #555;
+	letter-spacing: 1px;
+}
+
+.employee {
+	min-width: 430px;
+	min-height: 170px;
+	border: 2px solid #ddd;
+	border-radius: 10px;
+	display: inline-block;
+	max-width: 29%;
+	margin: 20px 0 20px 30px;
+	padding: 0;
+}
+
+.employee:hover {
+	cursor: pointer;
+}
+
+.details p {
+	margin: 0;
+	padding: 0;
+	color: #aaa;
+	font-size: .75em;
+	letter-spacing: .5px;
+}
+
+.mdetails p {
+	color: #aaa;
+	margin-bottom: 5px;
+}
+
+.photo {
+	display: inline-block;
+}
+
+.photo img {
+	padding: 20px;
+	padding-right: 10px;
+	margin: 0 auto; 
+}
+
+.details {
+	display: inline-block;
+	vertical-align: middle;
+	padding-left: 0px;
+	margin: 0 auto;
+}
+
+p.name {
+	font-weight: bold;
+	font-size: 1em;
+	color: #555;
+}
+
+.modal-footer {
+	margin: 0 auto;
+}
+
+.search {
+	
+}
+span img {
+	height: 40px;
+	width: 40px;
+	margin-right: 10px;
+}
+
+.title span {
+	float: right;
+	margin-right: 20px;
+}
+.uName {
+	display: none;
+}

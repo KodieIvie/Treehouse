@@ -1,0 +1,13 @@
+.grid-33
+  .app--section
+    ul.app--message--list
+      each msg in data.messages
+        li
+          h3
+            | Conversation with 
+            a @#{msg.recipient_screen_name}
+          ul.app--message--conversation
+            li.app--message
+              img.app--avatar(src= msg.sender.profile_image_url)
+              p.app--message--text #{msg.text}
+              p.app--message--timestamp #{data.moment(msg.created_at).fromNow()}
